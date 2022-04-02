@@ -67,32 +67,43 @@ function App() {
     setPage1(1);
     if (currentPage < 5) {
       setPage2(2);
-    } else {
+    }
+     else {
       setPage2("...");
     }
     if (currentPage < 5) {
       setPage3(3);
-    } else {
+    }
+    else if (lastPage-5 < currentPage) {
+      setPage3(lastPage-4);
+    }  else {
       setPage3(currentPage - 1);
     }
     if (currentPage < 5) {
       setPage4(4);
-    } else {
+    }
+    else if (lastPage-5 < currentPage) {
+      setPage4(lastPage-3);
+    } 
+    else {
       setPage4(currentPage);
     }
     if (currentPage < 4) {
-      setPage5("...");
+      setPage5(5);
+    }
+    else if (lastPage-5 < currentPage) {
+      setPage5(lastPage-2);
     } else {
       setPage5(currentPage + 1);
     }
-    if (currentPage < 5) {
-      setPage6();
+    if (lastPage-5 < currentPage) {
+      setPage6(lastPage-1);
     } else {
       setPage6("...");
     }
     setPage7(lastPage);
     setPages([page1, page2, page3, page4, page5, page6, page7]);
-  }, [currentPage]);
+  }, [currentPage,pages]);
 
   useEffect(() => {
     setLoading(true);
@@ -174,14 +185,14 @@ function App() {
               <span
                 key={index}
                 className={page === currentPage ? "centerNmbr" : ""}
-                onClick={() => setCurrentPage(page)}
+                onClick={() => page!=="..." ? setCurrentPage(page): null}
               >
                 {page}
               </span>
             );
           })}
           {/* <p>{currentPage}</p> */}
-          {
+          {currentPage < lastPage && (
             <span id="p9">
               <img
                 onClick={() => {
@@ -191,7 +202,8 @@ function App() {
                 alt="Right Arrow"
               />
             </span>
-          }
+          )}
+          
         </div>
       </div>
       {
