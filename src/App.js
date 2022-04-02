@@ -20,7 +20,27 @@ function App() {
   const [characters, setCharacters] = useState([]);
   // Loading ekranını açıp kapama
   const [loading, setLoading] = useState(false);
-  let lastPage = 0;
+  // Son sayfa
+  const [lastPage, setLastPage] = useState(0);
+  // Pagination'daki sayfa sayıları
+
+  //Sayfalar
+  const [page1, setPage1] = useState(1);
+  const [page2, setPage2] = useState(2);
+  const [page3, setPage3] = useState(3);
+  const [page4, setPage4] = useState(4);
+  const [page5, setPage5] = useState(5);
+  const [page6, setPage6] = useState(6);
+  const [page7, setPage7] = useState(7);
+  const [pages, setPages] = useState([
+    page1,
+    page2,
+    page3,
+    page4,
+    page5,
+    page6,
+    page7,
+  ]);
 
   useEffect(() => {
     console.log("Toplam karakter sayısını çekme");
@@ -34,16 +54,45 @@ function App() {
         hash: "ab70340117414655f7df9485b6ca8836",
       },
     }).then((output) => {
-      //Session storage'a yükleme
-      sessionStorage.setItem(
-        "dataCount",
-        JSON.stringify(output.data.data.total)
-      );
       // Oluşacak sayfa sayısını hesaplama
-      lastPage = Math.ceil(output.data.data.total / charOnPage);
-      console.log("Toplam kaç sayfa olacak: ", lastPage);
+      setLastPage(Math.ceil(output.data.data.total / charOnPage -1));
     });
-  }, []);
+    //Session storage'a yükleme
+    console.log("Last pagedir bu: ", lastPage);
+    sessionStorage.setItem("lastPage", lastPage);
+  }, [lastPage]);
+
+  useEffect(() => {
+    console.log("Şu anki sayfa: ", currentPage);
+    setPage1(1);
+    if (currentPage < 5) {
+      setPage2(2);
+    } else {
+      setPage2("...");
+    }
+    if (currentPage < 5) {
+      setPage3(3);
+    } else {
+      setPage3(currentPage - 1);
+    }
+    if (currentPage < 5) {
+      setPage4(4);
+    } else {
+      setPage4(currentPage);
+    }
+    if (currentPage < 4) {
+      setPage5("...");
+    } else {
+      setPage5(currentPage + 1);
+    }
+    if (currentPage < 5) {
+      setPage6();
+    } else {
+      setPage6("...");
+    }
+    setPage7(lastPage);
+    setPages([page1, page2, page3, page4, page5, page6, page7]);
+  }, [currentPage]);
 
   useEffect(() => {
     setLoading(true);
@@ -112,17 +161,32 @@ function App() {
           {currentPage > 1 && (
             <span id="p1">
               <img
-                onClick={() => setCurrentPage(currentPage - 1)}
+                onClick={() => {
+                  setCurrentPage(currentPage - 1);
+                }}
                 src={pageLeftArrow}
                 alt="Left Arrow"
               />
             </span>
           )}
-          <p>{currentPage}</p>
+          {pages.map((page, index) => {
+            return (
+              <span
+                key={index}
+                className={page === currentPage ? "centerNmbr" : ""}
+                onClick={() => setCurrentPage(page)}
+              >
+                {page}
+              </span>
+            );
+          })}
+          {/* <p>{currentPage}</p> */}
           {
             <span id="p9">
               <img
-                onClick={() => setCurrentPage(currentPage + 1)}
+                onClick={() => {
+                  setCurrentPage(currentPage + 1);
+                }}
                 src={pageRightArrow}
                 alt="Right Arrow"
               />
